@@ -1,6 +1,7 @@
 # uk-gridref
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library to convert between UK Ordinance Survey Grid references
+and Latitude Longitude
 
 ## Usage
 
@@ -8,6 +9,6 @@ FIXME
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Michael Bauer
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the 2-Clause BSD License, see LICENSE for details
