@@ -57,7 +57,6 @@
     (* 720 tan6lat)))
     dE (- E E0)
     ]
-    (do (println lat))
     {:latitude (to-deg (+ lat (* -1 VII (. Math pow dE 2)) (* VIII (. Math
     pow dE 4)) (* -1 IX (. Math pow dE 6))))
      :longitude (to-deg (+ lon0 (* X dE) (* -1 XI (. Math pow dE 3)) (* XII
@@ -70,7 +69,6 @@
   "pads a string to a certain length with a given character"
   [s length character]
   (loop [s s]
-    (println s)
     (if (>= (. s length) length) 
       s
       (recur (str s character)))))
