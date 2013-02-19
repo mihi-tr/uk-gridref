@@ -66,7 +66,38 @@
      
     ))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn pad-string 
+  "pads a string to a certain length with a given character"
+  [s length character]
+  (loop [s s]
+    (println s)
+    (if (>= (. s length) length) 
+      s
+      (recur (str s character)))))
+
+(defn gridref-to-e-n 
+  "convert a gridref string to eastings and northings"
+  [gridref]
+  (let [
+    l1 (- (. (. gridref toUpperCase) codePointAt 0) (. "A" codePointAt 0))
+    l2 (- (. (. gridref toUpperCase) codePointAt 1) (. "A" codePointAt 0))
+    l1 (if (> l1 7) (- l1 1) l1)
+    l2 (if (> l2 7) (- l2 1) l2)
+    e (+ (* (mod (- l1 2) 5) 5) (mod l2 5))
+    n (int (- 19 (* (. Math floor (/ l1 5)) 5) (. Math floor (/ l2 5))))
+    ]
+    (if (or (< e 0) (> e 6) (< n 0) (> n 12)) {:eastings nil :northings
+    nil}
+    (let 
+      [gridref (. (. gridref substring 2) replace " " "")
+       e (str e (. gridref substring 0 (/ (. gridref length) 2)))
+       n (str n (. gridref substring (/ (. gridref length) 2)))
+      ]
+      (if (< (. e length) 10) 
+        {:eastings (pad-string (str e 5) 10 "0")
+         :northings (pad-string (str n 5) 10 "0")}
+        {:eastings e
+         :northings n})
+      )
+    )))
+
