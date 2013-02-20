@@ -5,12 +5,11 @@
   [x]
   (/ (* x 180) (. Math PI)))
 
-(defn e-n-to-osgb36
-  "convert eastings and northings to osgb takes {:eastings NNN :northings NNNN and returnes {:latitude NN.nnn and :longitude NN.nnn}"
-  [gridref]
-  (let [E (get gridref :eastings) N (get gridref :northings)
-    a 6377563.396 b 6356256.910
-    F0 0.9996012717 
+
+(defn e-n-to-lat-lon 
+  "convert eastings and northings to latitude and longitude"
+  [E N a b F0]
+  (let [
     lat0 (/ (* 49 (. Math PI)) 180) 
     lon0 (/ (* -2 (. Math PI)) 180) 
     N0 -100000 
@@ -65,6 +64,25 @@
      
     ))
 
+(defn e-n-to-osgb36
+  "convert eastings and northings to osgb takes {:eastings NNN :northings NNNN and returnes {:latitude NN.nnn and :longitude NN.nnn}"
+  [gridref]
+  (let [E (get gridref :eastings) N (get gridref :northings)
+    a 6377563.396 b 6356256.910
+    F0 0.9996012717
+    ]
+    (e-n-to-lat-lon E N a b F0)))
+
+(defn e-n-to-wgs84
+  "convert eastings and northings to wgs84 lat lon"
+  [gridref]
+  (let [
+    E (get gridref :eastings) N (get gridref :northings)
+    a 6378137 b 6356752.3142
+    F0 0.9996
+    ]
+    (e-n-to-lat-lon E N a b F0)))
+
 (defn pad-string 
   "pads a string to a certain length with a given character"
   [s length character]
@@ -91,11 +109,11 @@
        e (str e (. gridref substring 0 (/ (. gridref length) 2)))
        n (str n (. gridref substring (/ (. gridref length) 2)))
       ]
-      (if (< (. e length) 10) 
-        {:eastings (pad-string (str e 5) 10 "0")
-         :northings (pad-string (str n 5) 10 "0")}
-        {:eastings e
-         :northings n})
+      (if (< (. e length) 6) 
+        {:eastings (. Integer parseInt (pad-string (str e 5) 6 "0"))
+         :northings (. Integer parseInt (pad-string (str n 5) 6 "0"))}
+        {:eastings (. Integer parseInt e)
+         :northings (. Integer parseInt n)})
       )
     )))
 
